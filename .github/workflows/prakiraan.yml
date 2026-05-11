@@ -1,5 +1,5 @@
 name: prakiraan
-   
+    
 on:
   workflow_dispatch:
   schedule:
