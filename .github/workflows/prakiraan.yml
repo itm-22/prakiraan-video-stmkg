@@ -1,12 +1,12 @@
-name: Prakiraan Cuaca Harian
-  
+name: prakiraan
+
 on:
-  schedule:
-    - cron: '5 23 * * *'
   workflow_dispatch:
- 
+  schedule:
+    - cron: '5 23 * * *'   # 06.00 WIB setiap hari
+
 jobs:
-  prakiraan:
+  run-prakiraan:
     runs-on: ubuntu-latest
 
     steps:
@@ -19,19 +19,34 @@ jobs:
           python-version: '3.11'
 
       - name: Install FFmpeg
-        run: sudo apt-get update && sudo apt-get install -y ffmpeg
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ffmpeg
 
       - name: Install dependencies
-        run: pip install -r requirements.txt
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
 
       - name: Download video template
         run: |
-          gdown "https://drive.google.com/uc?id=${{ secrets.VIDEO_TEMPLATE_ID }}" \
-            -O prakiraan.mp4
+          gdown "https://drive.google.com/uc?id=ID_FILE_VIDEO_TEMPLATE" \
+            -O template_video.mp4
 
       - name: Run script
         env:
           EMAIL_ADDRESS: ${{ secrets.EMAIL_ADDRESS }}
           EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
-          RECIPIENT_EMAIL: ${{ secrets.RECIPIENT_EMAIL }}
-        run: python new_prakiraan.py
+          GOOGLE_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}
+          GOOGLE_DRIVE_FOLDER_ID: ${{ secrets.GOOGLE_DRIVE_FOLDER_ID }}
+        run: |
+          python new_prakiraan.py
+
+      # Opsional: simpan output sebagai artifact
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: prakiraan-output
+          path: |
+            prakiraan_cuaca.csv
+            output/prakiraan_video_output.mp4
