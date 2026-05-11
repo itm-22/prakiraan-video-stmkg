@@ -37,12 +37,14 @@ output_video_path = os.path.join(output_dir, "prakiraan_video_output.mp4")
 # Ikon arah angin
 ikon_arah_path = os.path.join(ikon_dir, "ikon_arah_angin.png")
 
-# Font (Linux GitHub Actions)
-font_path = "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf"
+custom_font = os.path.join(BASE_DIR, "fonts", "Bahnschrift.ttf")
 
-# Jika font Linux tidak ada, fallback ke Windows
-if not os.path.exists(font_path):
-    font_path = "C:/Windows/Fonts/Bahnschrift.ttf"
+if os.path.exists(custom_font):
+    font_path = custom_font
+else:
+    font_path = "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf"
+
+font = ImageFont.truetype(font_path, 21)
 
 # =====================================================================
 # URL API BMKG
