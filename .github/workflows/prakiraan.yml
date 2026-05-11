@@ -30,7 +30,7 @@ jobs:
 
       - name: Download video template
         run: |
-          gdown --fuzzy "https://drive.google.com/file/d/${{ secrets.VIDEO_TEMPLATE_FILE_ID }}/view?usp=sharing" \
+          gdown --fuzzy "https://drive.google.com/file/d/${{ secrets.VIDEO_TEMPLATE_ID }}/view?usp=sharing" \
             -O prakiraan.mp4
 
       - name: Run script
