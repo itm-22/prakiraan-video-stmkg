@@ -8,7 +8,7 @@ import smtplib
 import mimetypes
 from email.message import EmailMessage
 from moviepy import VideoFileClip, ImageClip, CompositeVideoClip
-     
+      
 # =====================================================================
 # KONFIGURASI PATH (KOMPATIBEL WINDOWS & GITHUB ACTIONS)
 # =====================================================================
