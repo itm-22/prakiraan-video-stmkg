@@ -30,7 +30,7 @@ jobs:
 
       - name: Download video template
         run: |
-          gdown "https://drive.google.com/uc?id=ID_FILE_VIDEO_TEMPLATE" \
+          gdown "https://drive.google.com/file/d/1XFNoWkxMM7gKFY2FtgZk3IQs6JqvypcO" \
             -O template_video.mp4
 
       - name: Run script
