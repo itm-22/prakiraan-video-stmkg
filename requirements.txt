@@ -6,4 +6,3 @@ moviepy
 imageio
 imageio-ffmpeg
 gdown
- 
