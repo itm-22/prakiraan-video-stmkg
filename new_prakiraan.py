@@ -376,7 +376,8 @@ media = MediaFileUpload(
 uploaded_file = drive_service.files().create(
     body=file_metadata,
     media_body=media,
-    fields="id, webViewLink"
+    fields="id, webViewLink",
+    supportsAllDrives=True
 ).execute()
 
 file_id = uploaded_file["id"]
