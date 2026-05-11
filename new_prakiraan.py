@@ -317,89 +317,25 @@ overlay_clip.close()
 print(f"✅ Video berhasil dibuat: {output_video_path}")
 
 # =====================================================================
-# UPLOAD VIDEO KE GOOGLE DRIVE + KIRIM EMAIL CSV + LINK VIDEO
+# LINK KE GITHUB ACTIONS ARTIFACT
 # =====================================================================
+run_id = os.environ.get("GITHUB_RUN_ID")
+repo = os.environ.get("GITHUB_REPOSITORY")
 
-import os
-import json
-import mimetypes
-import smtplib
-from email.message import EmailMessage
+if run_id and repo:
+    artifact_link = f"https://github.com/{repo}/actions/runs/{run_id}"
+else:
+    artifact_link = "Link workflow tidak tersedia"
 
-from google.oauth2.service_account import Credentials
-from googleapiclient.discovery import build
-from googleapiclient.http import MediaFileUpload
-
-print("☁️ Upload video ke Google Drive...")
-
-# ---------------------------------------------------------------------
-# PATH FILE
-# ---------------------------------------------------------------------
-csv_file = csv_path
-video_file = output_video_path
-
-# ---------------------------------------------------------------------
-# KONFIGURASI GOOGLE DRIVE
-# ---------------------------------------------------------------------
-# Simpan JSON service account di GitHub Secret: GOOGLE_SERVICE_ACCOUNT_JSON
-# Simpan ID folder Google Drive di GitHub Secret: GOOGLE_DRIVE_FOLDER_ID
-
-service_account_info = json.loads(
-    os.environ["GOOGLE_SERVICE_ACCOUNT_JSON"]
-)
-
-folder_id = os.environ["GOOGLE_DRIVE_FOLDER_ID"]
-
-SCOPES = ["https://www.googleapis.com/auth/drive"]
-
-credentials = Credentials.from_service_account_info(
-    service_account_info,
-    scopes=SCOPES
-)
-
-drive_service = build("drive", "v3", credentials=credentials)
-
-# ---------------------------------------------------------------------
-# UPLOAD VIDEO
-# ---------------------------------------------------------------------
-file_metadata = {
-    "name": os.path.basename(video_file),
-    "parents": [folder_id]
-}
-
-media = MediaFileUpload(
-    video_file,
-    mimetype="video/mp4",
-    resumable=True
-)
-
-uploaded_file = drive_service.files().create(
-    body=file_metadata,
-    media_body=media,
-    fields="id, webViewLink",
-    supportsAllDrives=True
-).execute()
-
-file_id = uploaded_file["id"]
-
-# Ubah permission agar bisa diakses siapa saja
-drive_service.permissions().create(
-    fileId=file_id,
-    body={
-        "type": "anyone",
-        "role": "reader"
-    }
-).execute()
-
-# Link download/view
-video_link = f"https://drive.google.com/file/d/{file_id}/view?usp=sharing"
-
-print("✅ Video berhasil diupload")
-print("🔗 Link video:", video_link)
+print("🔗 Link workflow:", artifact_link)
 
 # =====================================================================
 # KIRIM EMAIL
 # =====================================================================
+import os
+import smtplib
+from email.message import EmailMessage
+
 print("📧 Mengirim email...")
 
 try:
@@ -416,18 +352,21 @@ try:
     msg.set_content(
         f"""Berikut terlampir file CSV prakiraan cuaca harian.
 
-Video prakiraan cuaca dapat diunduh melalui tautan berikut:
-{video_link}
+Video prakiraan cuaca dapat diunduh melalui link berikut:
+{artifact_link}
+
+Setelah membuka link di atas, scroll ke bagian Artifacts,
+lalu unduh file 'prakiraan-output'.
 """
     )
 
     # Lampirkan CSV
-    with open(csv_file, "rb") as f:
+    with open(csv_path, "rb") as f:
         msg.add_attachment(
             f.read(),
             maintype="text",
             subtype="csv",
-            filename=os.path.basename(csv_file),
+            filename=os.path.basename(csv_path),
         )
 
     # Kirim email
