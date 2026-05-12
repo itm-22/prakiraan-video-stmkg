@@ -3,7 +3,7 @@ name: prakiraan
 on:
   workflow_dispatch:
   schedule:
-    - cron: '5 23 * * *'   # 06.00 WIB setiap hari
+    - cron: '30 22 * * *'   # 06.00 WIB setiap hari
  
 jobs:
   run-prakiraan:
