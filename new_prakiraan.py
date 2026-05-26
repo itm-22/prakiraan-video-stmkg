@@ -395,12 +395,15 @@ try:
     email_address = os.environ["EMAIL_ADDRESS"]
     email_password = os.environ["EMAIL_PASSWORD"]
 
-    recipient_email = "ferdyindra38@gmail.com"
+    recipient_email = [
+        "ferdyindra38@gmail.com",
+        "labmetpenerbangan19@gmail.com"
+    ]
 
     msg = EmailMessage()
     msg["Subject"] = "Prakiraan Cuaca Harian STMKG"
     msg["From"] = email_address
-    msg["To"] = recipient_email
+    msg["To"] = ", ".join(recipient_email)
 
     msg.set_content(
         f"""Berikut terlampir file CSV prakiraan cuaca harian.
