@@ -61,11 +61,9 @@ button{
 🔊 Suara
 </button>
 
-<button onclick="fullScreen()">
-⛶ Fullscreen
+<button id="fullscreenBtn" onclick="toggleFullscreen()">
+⛶ Perbesar
 </button>
-
-</div>
 
 </div>
 
@@ -75,26 +73,60 @@ const video=document.getElementById(
     "weatherVideo"
 );
 
-// mulai dalam mode mute agar autoplay jalan
+const fullscreenBtn=document.getElementById(
+    "fullscreenBtn"
+);
+
+// autoplay tetap berjalan
 video.muted=true;
 
+
+// Tombol suara
 function toggleSound(){
 
     video.muted=!video.muted;
 
 }
 
-function fullScreen(){
 
-    let elem=document.documentElement;
+// Tombol fullscreen ↔ kecilkan
+function toggleFullscreen(){
 
-    if(elem.requestFullscreen){
-        elem.requestFullscreen();
+    if(!document.fullscreenElement){
+
+        document.documentElement.requestFullscreen();
+
+    }else{
+
+        document.exitFullscreen();
+
     }
 
 }
 
-// refresh otomatis tiap 5 menit
+
+// Ubah tulisan tombol otomatis
+document.addEventListener(
+    "fullscreenchange",
+    ()=>{
+
+        if(document.fullscreenElement){
+
+            fullscreenBtn.innerHTML=
+            "🗗 Kecilkan";
+
+        }else{
+
+            fullscreenBtn.innerHTML=
+            "⛶ Perbesar";
+
+        }
+
+    }
+);
+
+
+// Refresh video tiap 5 menit
 setInterval(()=>{
 
     location.reload();
