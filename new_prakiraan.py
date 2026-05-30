@@ -401,10 +401,9 @@ try:
     email_address = os.environ["EMAIL_ADDRESS"]
     email_password = os.environ["EMAIL_PASSWORD"]
 
-    recipient_email = [
-        "ferdyindra38@gmail.com",
-        "labmetpenerbangan19@gmail.com"
-    ]
+    recipient_email = os.environ[
+    "RECIPIENT_EMAILS"
+    ].split(",")
 
     msg = EmailMessage()
     msg["Subject"] = "Prakiraan Cuaca Harian STMKG"
