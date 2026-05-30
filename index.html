@@ -37,6 +37,14 @@ video{
     display:flex;
     gap:10px;
     z-index:999;
+
+    opacity:1;
+    transition:opacity 0.5s;
+}
+
+.controls.hide{
+    opacity:0;
+    pointer-events:none;
 }
 
 button{
@@ -186,9 +194,63 @@ setInterval(()=>{
 
 },300000);
 
+// ===============================
+// Sembunyikan tombol jika mouse diam
+// ===============================
 
+const controls =
+document.querySelector(
+".controls"
+);
+
+let hideTimer;
+
+
+// fungsi reset timer
+function showControls(){
+
+    // tampilkan tombol
+    controls.classList.remove(
+        "hide"
+    );
+
+    // hapus timer lama
+    clearTimeout(
+        hideTimer
+    );
+
+    // sembunyikan setelah 3 detik
+    hideTimer =
+    setTimeout(()=>{
+
+        controls.classList.add(
+            "hide"
+        );
+
+    },3000);
+
+}
+
+
+// deteksi gerakan mouse
+document.addEventListener(
+"mousemove",
+showControls
+);
+
+
+// deteksi sentuhan (untuk HP/tablet)
+document.addEventListener(
+"touchstart",
+showControls
+);
+
+
+// jalankan saat halaman dibuka
+showControls();
 
 </script>
 
 </body>
 </html>
+
